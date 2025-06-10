@@ -11,9 +11,14 @@ import { CURRENCY_PAIRS } from '@/pages/Index';
 interface ForexDashboardProps {
   onRateSelected?: (pair: string, rate: number) => void;
   currentPair?: string;
+  onPairChange?: (pair: string) => void;
 }
 
-const ForexDashboard: React.FC<ForexDashboardProps> = ({ onRateSelected, currentPair }) => {
+const ForexDashboard: React.FC<ForexDashboardProps> = ({ 
+  onRateSelected, 
+  currentPair,
+  onPairChange 
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scriptLoaded = useRef<boolean>(false);
   const [selectedPair, setSelectedPair] = useState<string>(currentPair || "EUR/USD");
@@ -22,16 +27,39 @@ const ForexDashboard: React.FC<ForexDashboardProps> = ({ onRateSelected, current
   );
   const [autoSync, setAutoSync] = useState<boolean>(false);
 
-  // Fonction pour simuler une mise à jour du taux (pourrait être remplacée par des données réelles)
+  // Synchroniser avec la paire sélectionnée depuis l'extérieur
+  useEffect(() => {
+    if (currentPair && currentPair !== selectedPair) {
+      setSelectedPair(currentPair);
+      const pair = CURRENCY_PAIRS.find(p => p.symbol === currentPair);
+      if (pair) {
+        // Simuler un taux de marché réel avec une légère variation
+        const marketRate = pair.defaultSpotRate + (Math.random() - 0.5) * 0.005;
+        setCurrentRate(parseFloat(marketRate.toFixed(5)));
+        
+        // Appliquer automatiquement le nouveau taux
+        if (onRateSelected) {
+          onRateSelected(currentPair, parseFloat(marketRate.toFixed(5)));
+        }
+      }
+    }
+  }, [currentPair, selectedPair, onRateSelected]);
+
+  // Fonction pour simuler une mise à jour du taux avec des données de marché réalistes
   const updateRate = () => {
-    // Dans une application réelle, cette fonction ferait un appel API pour obtenir le taux de change actuel
-    // Pour notre démonstration, nous appliquons une légère variation aléatoire
     const pair = CURRENCY_PAIRS.find(p => p.symbol === selectedPair);
     if (pair) {
+      // Simuler des mouvements de marché plus réalistes
       const baseRate = pair.defaultSpotRate;
-      const variation = (Math.random() - 0.5) * 0.01; // Variation de ±0.5%
+      const variation = (Math.random() - 0.5) * 0.008; // Variation de ±0.4%
       const newRate = baseRate + baseRate * variation;
-      setCurrentRate(parseFloat(newRate.toFixed(5)));
+      const roundedRate = parseFloat(newRate.toFixed(5));
+      setCurrentRate(roundedRate);
+      
+      // Auto-apply si autoSync est activé
+      if (autoSync && onRateSelected) {
+        onRateSelected(selectedPair, roundedRate);
+      }
     }
   };
 
@@ -42,16 +70,38 @@ const ForexDashboard: React.FC<ForexDashboardProps> = ({ onRateSelected, current
     }
   };
 
+  // Gérer le changement de paire de devises
+  const handlePairChange = (newPair: string) => {
+    setSelectedPair(newPair);
+    
+    // Mettre à jour le taux avec la nouvelle paire
+    const pair = CURRENCY_PAIRS.find(p => p.symbol === newPair);
+    if (pair) {
+      const marketRate = pair.defaultSpotRate + (Math.random() - 0.5) * 0.005;
+      const roundedRate = parseFloat(marketRate.toFixed(5));
+      setCurrentRate(roundedRate);
+      
+      // Notifier le composant parent du changement de paire
+      if (onPairChange) {
+        onPairChange(newPair);
+      }
+      
+      // Appliquer automatiquement le nouveau taux
+      if (onRateSelected) {
+        onRateSelected(newPair, roundedRate);
+      }
+    }
+  };
+
   // Mettre à jour automatiquement le taux si autoSync est activé
   useEffect(() => {
     if (autoSync) {
       const interval = setInterval(() => {
         updateRate();
-        applyRate();
       }, 5000); // Mise à jour toutes les 5 secondes
       return () => clearInterval(interval);
     }
-  }, [autoSync, selectedPair, currentRate]);
+  }, [autoSync, selectedPair]);
 
   useEffect(() => {
     if (containerRef.current && !scriptLoaded.current) {
@@ -129,7 +179,7 @@ const ForexDashboard: React.FC<ForexDashboardProps> = ({ onRateSelected, current
               <Label htmlFor="pair-select">Select Currency Pair</Label>
               <Select 
                 value={selectedPair} 
-                onValueChange={setSelectedPair}
+                onValueChange={handlePairChange}
               >
                 <SelectTrigger id="pair-select" className="w-full">
                   <SelectValue placeholder="Select pair" />
@@ -205,4 +255,4 @@ const ForexDashboard: React.FC<ForexDashboardProps> = ({ onRateSelected, current
   );
 };
 
-export default ForexDashboard; 
+export default ForexDashboard;

@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { StrategyComponent } from '../pages/Index';
 import { Plus } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import { StrategyComponent } from '../types/StrategyComponent';
 
 interface ZeroCostStrategiesProps {
   spotPrice: number;
@@ -866,4 +866,4 @@ const ZeroCostStrategies: React.FC<ZeroCostStrategiesProps> = ({
   );
 };
 
-export default ZeroCostStrategies;
+export default ZeroCostStrategies; 

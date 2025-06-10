@@ -1,7 +1,6 @@
-
 import { useEffect, useState } from "react";
 
-export type Theme = "light" | "dark" | "bloomberg" | "futuristic" | "system";
+export type Theme = "light" | "dark" | "bloomberg" | "system";
 
 // Type pour la fenêtre globale
 declare global {
@@ -26,7 +25,7 @@ export function useTheme() {
       const root = window.document.documentElement;
       
       // Supprimer toutes les classes de thème
-      root.classList.remove("light", "dark", "bloomberg-theme", "futuristic-theme");
+      root.classList.remove("light", "dark", "bloomberg-theme");
       
       // Gérer les préférences système
       if (newTheme === "system") {
@@ -37,9 +36,7 @@ export function useTheme() {
       
       // Appliquer le nouveau thème
       if (newTheme === "bloomberg") {
-        root.classList.add("dark", "bloomberg-theme");
-      } else if (newTheme === "futuristic") {
-        root.classList.add("dark", "futuristic-theme");
+        root.classList.add("dark", "bloomberg-theme"); // Bloomberg est basé sur le thème dark avec des modifications
       } else {
         root.classList.add(newTheme);
       }
@@ -62,4 +59,4 @@ export function useTheme() {
   }, [theme]);
 
   return { theme, setTheme };
-}
+} 

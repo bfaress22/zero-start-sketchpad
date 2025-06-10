@@ -1,4 +1,3 @@
-
 // Script pour initialiser le thème avant le rendu React
 (function() {
   function getInitialTheme() {
@@ -17,7 +16,7 @@
     const root = document.documentElement;
     
     // Supprimer toutes les classes de thème
-    root.classList.remove('light', 'dark', 'bloomberg-theme', 'futuristic-theme');
+    root.classList.remove('light', 'dark', 'bloomberg-theme');
     
     if (theme === 'system') {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -28,8 +27,6 @@
     // Appliquer le thème
     if (theme === 'bloomberg') {
       root.classList.add('dark', 'bloomberg-theme');
-    } else if (theme === 'futuristic') {
-      root.classList.add('dark', 'futuristic-theme');
     } else {
       root.classList.add(theme);
     }
@@ -40,4 +37,4 @@
   
   // Ajouter cette information au window pour que le React puisse la récupérer
   window.__THEME_INIT__ = initialTheme;
-})();
+})(); 

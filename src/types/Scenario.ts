@@ -1,5 +1,5 @@
 import { StressTestScenario, Result } from './TradingTypes';
-import { StrategyComponent } from '../pages/Index';
+import { StrategyComponent } from './StrategyComponent';
 
 export interface SavedScenario {
   id: string;

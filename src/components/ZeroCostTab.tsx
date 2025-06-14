@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import ZeroCostStrategies from './ZeroCostStrategies';
 import { toast } from "@/hooks/use-toast";
-import { StrategyComponent } from '../pages/Index';
+import { StrategyComponent } from '../types/StrategyComponent';
 
 interface ZeroCostTabProps {
   spotPrice: number;
@@ -48,4 +48,4 @@ const ZeroCostTab: React.FC<ZeroCostTabProps> = ({
   );
 };
 
-export default ZeroCostTab; 
+export default ZeroCostTab;

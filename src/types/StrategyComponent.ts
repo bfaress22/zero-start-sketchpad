@@ -1,16 +1,16 @@
 
 export interface StrategyComponent {
-  type: 'call' | 'put' | 'forward' | 'spot';
-  strike?: number;
-  premium?: number;
+  type: string;
+  strike: number;
+  strikeType: 'percent' | 'absolute';
+  volatility: number;
   quantity: number;
-  expiry?: string;
-  side: 'long' | 'short';
-  id: string;
-  balancingOptions?: {
-    method: 'equilibrium';
+  barrier?: number;
+  barrierType?: 'percent' | 'absolute';
+  dynamicStrike?: {
+    method: string;
+    balanceWith?: string;
     balanceWithIndex: number;
     volatilityAdjustment?: number;
-    balanceWith?: string; // Ajout de la propriété manquante
   };
 }

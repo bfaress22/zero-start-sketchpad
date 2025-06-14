@@ -1,3 +1,25 @@
+import React from 'react';
+import { TradingViewWidget } from 'react-tradingview-widget';
+import ZeroCostTab from '@/components/ZeroCostTab';
+import Simulator from '@/components/Simulator';
+import { StressTest } from '@/components/StressTest';
+import { SavedScenario } from '@/types/Scenario';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+import {
+  ResizablePanel,
+  ResizablePanelGroup,
+  ResizableHandle
+} from "@/components/ui/resizable"
+import { CurrencyPairs } from '@/components/CurrencyPairs';
+import { CURRENCY_PAIRS } from '@/constants/currencyPairs';
+import { CalculatorState } from '@/types/CalculatorState';
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+
 export interface OptionImpliedVolatility {
   [key: string]: number;
 }
@@ -38,3 +60,18 @@ export interface Result {
   monthlyVolume: number;
   optionPrices?: OptionPrice[];
 }
+
+const Index: React.FC = () => {
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-4">
+        <h1 className="text-3xl font-bold text-center mb-8">FX Hedging Calculator</h1>
+        <div className="text-center">
+          <p>Welcome to the FX Hedging Calculator</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Index;

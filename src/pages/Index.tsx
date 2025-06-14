@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import TradingViewWidget, { Themes, BarStyles } from 'react-tradingview-widget';
 import { useTradingViewData, ForexPair } from '@/hooks/useTradingViewData';
@@ -10,7 +11,7 @@ import { Switch } from "@/components/ui/switch"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
-import { ModeToggle } from "@/components/mode-toggle"
+import { ModeToggle } from "@/components/ui/theme-toggle"
 import {
   Select,
   SelectContent,

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertCircle, RefreshCcw } from 'lucide-react';
-import { CURRENCY_PAIRS } from '@/pages/Index';
+import { CURRENCY_PAIRS } from '@/constants/currencyPairs';
 import ForexDataTable from './ForexDataTable';
 
 interface ForexDashboardProps {

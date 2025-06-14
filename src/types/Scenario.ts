@@ -1,4 +1,5 @@
-import { StressTestScenario, StrategyComponent, Result } from '../pages/Index';
+import { StressTestScenario, Result } from './TradingTypes';
+import { StrategyComponent } from '../pages/Index';
 
 export interface SavedScenario {
   id: string;
@@ -27,4 +28,4 @@ export interface SavedScenario {
   useImpliedVol?: boolean;
   impliedVolatilities?: Record<string, number>;
   customOptionPrices?: Record<string, Record<string, number>>;
-} 
+}

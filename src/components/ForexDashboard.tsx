@@ -5,8 +5,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertCircle, RefreshCcw } from 'lucide-react';
 import { CURRENCY_PAIRS } from '@/pages/Index';
+import ForexDataTable from './ForexDataTable';
 
 interface ForexDashboardProps {
   onRateSelected?: (pair: string, rate: number) => void;
@@ -165,6 +167,21 @@ const ForexDashboard: React.FC<ForexDashboardProps> = ({
     };
   }, []);
 
+  const handleSymbolSelect = (symbol: string, price: number) => {
+    // Convertir le format de symbole (EURUSD -> EUR/USD)
+    const formattedSymbol = `${symbol.slice(0,3)}/${symbol.slice(3,6)}`;
+    setSelectedPair(formattedSymbol);
+    setCurrentRate(price);
+    
+    if (onPairChange) {
+      onPairChange(formattedSymbol);
+    }
+    
+    if (onRateSelected) {
+      onRateSelected(formattedSymbol, price);
+    }
+  };
+
   return (
     <Card className="shadow-md w-full">
       <CardHeader className="pb-2 border-b">
@@ -172,84 +189,100 @@ const ForexDashboard: React.FC<ForexDashboardProps> = ({
       </CardHeader>
       
       <CardContent className="py-4">
-        <div className="mb-6 p-4 bg-muted/30 rounded-md border">
-          <h3 className="text-lg font-medium mb-3">Fast Currency Rate Sync</h3>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div>
-              <Label htmlFor="pair-select">Select Currency Pair</Label>
-              <Select 
-                value={selectedPair} 
-                onValueChange={handlePairChange}
-              >
-                <SelectTrigger id="pair-select" className="w-full">
-                  <SelectValue placeholder="Select pair" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CURRENCY_PAIRS.map(pair => (
-                    <SelectItem key={pair.symbol} value={pair.symbol}>
-                      {pair.symbol} - {pair.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <Label htmlFor="current-rate">Current Rate</Label>
-              <div className="flex items-center space-x-2">
-                <Input 
-                  id="current-rate"
-                  type="number"
-                  value={currentRate} 
-                  onChange={(e) => setCurrentRate(Number(e.target.value))}
-                  className="flex-1"
-                  step="0.00001"
-                />
-                <Button 
-                  size="icon"
-                  variant="outline"
-                  onClick={updateRate}
-                  title="Refresh rate"
-                >
-                  <RefreshCcw className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            
-            <div className="flex flex-col justify-end">
-              <Button onClick={applyRate} className="w-full">
-                Apply Rate to Parameters
-              </Button>
-              
-              <div className="flex items-center space-x-2 mt-2">
-                <Switch
-                  id="auto-sync"
-                  checked={autoSync}
-                  onCheckedChange={setAutoSync}
-                />
-                <Label htmlFor="auto-sync">Auto-sync (every 5s)</Label>
-              </div>
-            </div>
-          </div>
+        <Tabs defaultValue="sync" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="sync">Synchronisation Rapide</TabsTrigger>
+            <TabsTrigger value="data">Données Extraites</TabsTrigger>
+            <TabsTrigger value="widget">Widget TradingView</TabsTrigger>
+          </TabsList>
           
-          {autoSync && (
-            <div className="mt-3 flex items-center text-sm text-amber-600">
-              <AlertCircle className="h-4 w-4 mr-1" />
-              <span>Auto-sync is active. Rate will update automatically.</span>
+          <TabsContent value="sync" className="space-y-4">
+            <div className="p-4 bg-muted/30 rounded-md border">
+              <h3 className="text-lg font-medium mb-3">Fast Currency Rate Sync</h3>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div>
+                  <Label htmlFor="pair-select">Select Currency Pair</Label>
+                  <Select 
+                    value={selectedPair} 
+                    onValueChange={handlePairChange}
+                  >
+                    <SelectTrigger id="pair-select" className="w-full">
+                      <SelectValue placeholder="Select pair" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CURRENCY_PAIRS.map(pair => (
+                        <SelectItem key={pair.symbol} value={pair.symbol}>
+                          {pair.symbol} - {pair.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
+                  <Label htmlFor="current-rate">Current Rate</Label>
+                  <div className="flex items-center space-x-2">
+                    <Input 
+                      id="current-rate"
+                      type="number"
+                      value={currentRate} 
+                      onChange={(e) => setCurrentRate(Number(e.target.value))}
+                      className="flex-1"
+                      step="0.00001"
+                    />
+                    <Button 
+                      size="icon"
+                      variant="outline"
+                      onClick={updateRate}
+                      title="Refresh rate"
+                    >
+                      <RefreshCcw className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col justify-end">
+                  <Button onClick={applyRate} className="w-full">
+                    Apply Rate to Parameters
+                  </Button>
+                  
+                  <div className="flex items-center space-x-2 mt-2">
+                    <Switch
+                      id="auto-sync"
+                      checked={autoSync}
+                      onCheckedChange={setAutoSync}
+                    />
+                    <Label htmlFor="auto-sync">Auto-sync (every 5s)</Label>
+                  </div>
+                </div>
+              </div>
+              
+              {autoSync && (
+                <div className="mt-3 flex items-center text-sm text-amber-600">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  <span>Auto-sync is active. Rate will update automatically.</span>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        
-        <div className="h-[650px]">
-          <div className="tradingview-widget-container h-full" ref={containerRef}>
-            <div className="tradingview-widget-container__widget"></div>
-            <div className="tradingview-widget-copyright">
-              <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
-                <span className="blue-text">Track all markets on TradingView</span>
-              </a>
+          </TabsContent>
+          
+          <TabsContent value="data" className="space-y-4">
+            <ForexDataTable onSymbolSelect={handleSymbolSelect} />
+          </TabsContent>
+          
+          <TabsContent value="widget" className="space-y-4">
+            <div className="h-[650px]">
+              <div className="tradingview-widget-container h-full" ref={containerRef}>
+                <div className="tradingview-widget-container__widget"></div>
+                <div className="tradingview-widget-copyright">
+                  <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+                    <span className="blue-text">Track all markets on TradingView</span>
+                  </a>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );

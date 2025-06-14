@@ -9,6 +9,17 @@ export interface StressTestScenario {
   spotPriceChange: number;
   volatilityChange: number;
   timeDecay: number;
+  volatility: number;
+  drift: number;
+  priceShock: number;
+  forwardBasis?: number;
+  realBasis?: number;
+}
+
+export interface OptionPrice {
+  type: string;
+  price: number;
+  label?: string;
 }
 
 export interface Result {
@@ -17,4 +28,14 @@ export interface Result {
   payoff: number;
   premium: number;
   netResult: number;
+  timeToMaturity: number;
+  forward: number;
+  realPrice: number;
+  strategyPrice: number;
+  totalPayoff: number;
+  hedgedCost: number;
+  unhedgedCost: number;
+  deltaPnL: number;
+  monthlyVolume: number;
+  optionPrices?: OptionPrice[];
 }
